@@ -22,7 +22,7 @@ var createScene = function () {
     //var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter:2}, scene);
 
 
-    BABYLON.SceneLoader.Append("models/", "Knuckles-textured.obj", scene, function(scene) {
+    BABYLON.SceneLoader.Append("models/Knuckles/", "Knuckles.obj", scene, function(scene) {
         Console.log("Loaded...");
     });
 
