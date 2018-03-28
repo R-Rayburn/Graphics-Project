@@ -9,6 +9,9 @@ var createScene = function () {
     // Create the scene space
     var scene = new BABYLON.Scene(engine);
 
+    // enable physics using cannon.js physics engine with standard gravity (9.8m/s^2)
+    scene.enablePhysics();
+
     // Add a camera to the scene and attach it to the canvas
     //var camera = new BABYLON.ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, BABYLON.Vector3.Zero(), scene);
     //camera.attachControl(canvas, true);
@@ -22,6 +25,7 @@ var createScene = function () {
     // Add lights to the scene
     //var light1 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(1, 1, 0), scene);
     //var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 1, -1), scene);
+
     var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene);
     light.position = new BABYLON.Vector3(20, 40, 20);
     light.intensity = 0.5;
@@ -42,31 +46,28 @@ var createScene = function () {
     lightSphere2.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
 
     // Ground
-    var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 500, 0, 10, scene, false);
-    var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
-    groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
-    groundMaterial.diffuseTexture.uScale = 6;
-    groundMaterial.diffuseTexture.vScale = 6;
-    groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-    ground.position.y = -10.05;
-    ground.material = groundMaterial;
-
-
-    // Add and manipulate meshes in the scene
-    //var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter:2}, scene);
-
-    BABYLON.SceneLoader.Append("models/Knuckles/", "Knuckles.obj", scene, function(scene) {
-        Console.log("Loaded...");
+    //var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 500, 0, 10, scene, false);
+    var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 10, scene, false, function () {
+        ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground.position.y = -10.05;
+        ground.material = groundMaterial;
     });
 
 
-    /*
-    BABYLON.SceneLoader.Append("ugandan_knuckles/", "scene.gltf", scene, function (scene) {
-        // do something with the scene
-        Console.log("loaded...")
+    BABYLON.SceneLoader.AppendAsync("models/Knuckles/", "Knuckles.obj", scene).then(function (scene) {
+        // add rigidbody to Knuckles
+        var count = scene.meshes.length;
+        scene.meshes[count-1].PhysicsImposter = new BABYLON.PhysicsImpostor(scene.meshes[count-1], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
     });
-    */
 
+    if (scene == null) {
+        console.log("broken");
+    }
 
     return scene;
 };

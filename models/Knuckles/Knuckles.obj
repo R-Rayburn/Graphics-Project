@@ -1,7 +1,7 @@
 # Blender v2.79 (sub 0) OBJ File: 'Knuckles.blend'
 # www.blender.org
 mtllib Knuckles.mtl
-o Cube.001
+o Knuckles_Cube.001
 v 1.323430 2.547753 -0.438535
 v 0.284213 1.075332 -0.289139
 v 0.673479 1.337451 0.907663
