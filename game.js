@@ -59,6 +59,7 @@ var createScene = function () {
     });
 
     // Greate shadow generators.
+    // https://doc.babylonjs.com/api/classes/babylon.shadowgenerator
     var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
     var shadowGenerator2 = new BABYLON.ShadowGenerator(1024, light2);
 
