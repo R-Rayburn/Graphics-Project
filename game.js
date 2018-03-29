@@ -58,12 +58,25 @@ var createScene = function () {
         ground.material = groundMaterial;
     });
 
+    // Greate shadow generators.
+    var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
+    var shadowGenerator2 = new BABYLON.ShadowGenerator(1024, light2);
 
-    BABYLON.SceneLoader.AppendAsync("models/Knuckles/", "Knuckles.obj", scene).then(function (scene) {
+    var knuckles = BABYLON.SceneLoader.AppendAsync("models/Knuckles/", "Knuckles.obj", scene).then(function (scene) {
         // add rigidbody to Knuckles
         var count = scene.meshes.length;
         scene.meshes[count-1].PhysicsImposter = new BABYLON.PhysicsImpostor(scene.meshes[count-1], BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+
+        // Add shadow generators to knuckles.
+        shadowGenerator.getShadowMap().renderList.push(scene.meshes[count-1]);
+        shadowGenerator2.getShadowMap().renderList.push(scene.meshes[count-1]);
+
+        // Allows knuckles to recieve shadows???
+        scene.meshes[count-1].receiveShadows = true;
     });
+
+    // Allows landscape to recieve shadows.
+    ground.receiveShadows = true;
 
     if (scene == null) {
         console.log("broken");
