@@ -2,6 +2,10 @@ var canvas = document.getElementById("renderCanvas"); // Get the canvas element
 
 var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
 
+var knuckles = null;
+
+var actions = {};
+
 
 /******* Add the create scene function ******/
 var createScene = function () {
@@ -82,27 +86,32 @@ var createScene = function () {
 
 
     // import Knuckles asynchronously from .obj file generated using Blender
-    var knuckles = BABYLON.SceneLoader.AppendAsync("models/Knuckles/", "Knuckles.obj", scene).then(function (scene) {
+    BABYLON.SceneLoader.AppendAsync("models/Knuckles/", "Knuckles.obj", scene).then(function (scene) {
 
         // knuckles is the last mesh in the scene since we just added him
         let count = scene.meshes.length;
-        let knucklesMesh = scene.meshes[count-1];
+        let knuckles = scene.meshes[count-1];
 
         // add rigidbody to knuckles
-        knucklesMesh.PhysicsImposter = new BABYLON.PhysicsImpostor(knucklesMesh, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9 }, scene);
+        knuckles.PhysicsImposter = new BABYLON.PhysicsImpostor(knuckles, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9, angularDampening: 1 }, scene);
+
+        knuckles.PhysicsImposter.executeNativeFunction(function(world, body) {
+            body.fixedRotation = true;
+            body.updateMassProperties();
+        });
 
         // Add shadow generators to knuckles.
-        shadowGenerator.getShadowMap().renderList.push(knucklesMesh);
-        shadowGenerator2.getShadowMap().renderList.push(knucklesMesh);
+        shadowGenerator.getShadowMap().renderList.push(knuckles);
+        shadowGenerator2.getShadowMap().renderList.push(knuckles);
 
         // Allows knuckles to recieve shadows???
-        knucklesMesh.receiveShadows = true;
+        knuckles.receiveShadows = true;
 
         // lock Knuckles orientation about the y-axis so he doesn't fall over
         // still working on this...
 
         // set camera to follow Knuckles
-        camera.lockedTarget = knucklesMesh;
+        camera.lockedTarget = knuckles;
     });
 
     // Allows landscape to recieve shadows.
@@ -113,12 +122,55 @@ var createScene = function () {
         console.log("ERROR: Scene could not be set up properly!!");
     }
 
+    scene.actionManager = new BABYLON.ActionManager(scene);
+    scene.actionManager.registerAction(
+        new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (event) {
+            actions[event.sourceEvent.key] = true;
+        })
+    );
+    scene.actionManager.registerAction(
+        new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (event) {
+            actions[event.sourceEvent.key] = false;
+            console.log(event.sourceEvent.key);
+        })
+    );
+
     return scene;
 };
+
+function moveKnuckles() {
+    if (actions["w"] || actions["W"] || actions["ArrowUp"]) {
+        console.log("forward");
+        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0,0.2), knuckles.getAbsolutePosition());
+    }
+    if (actions["a"] || actions["A"] || actions["ArrowLeft"]) {
+        console.log("left");
+        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(-0.2,0,0), knuckles.getAbsolutePosition());
+    }
+    if (actions["s"] || actions["S"] || actions["ArrowDown"]) {
+        console.log("backward");
+        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0,-0.2), knuckles.getAbsolutePosition());
+    }
+    if (actions["d"] || actions["D"] || actions["ArrowRight"]) {
+        console.log("right");
+        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0.2,0,0), knuckles.getAbsolutePosition());
+    }
+    if (actions[" "]) {
+        console.log("jump");
+        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,1,0), knuckles.getAbsolutePosition());
+    }
+}
 
 /******* End of the create scene function ******/
 
 var scene = createScene(); //Call the createScene function
+
+scene.registerBeforeRender(function() {
+    knuckles = scene.meshes[scene.meshes.length-1];
+    if (!(knuckles === null)) {
+        moveKnuckles();
+    }
+});
 
 engine.runRenderLoop(function () { // Register a render loop to repeatedly render the scene
     scene.render();
