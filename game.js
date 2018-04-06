@@ -29,7 +29,7 @@ var createScene = function () {
 
     // create a camera that follows Knuckles (hopefully from behind)
     var camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 10, -10), scene);
-    camera.radius = 30;
+    camera.radius = -30;
     camera.heightOffset = 10;
     camera.rotationOffset = 0;
     camera.cameraAcceleration = 0.005;
