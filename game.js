@@ -16,7 +16,7 @@ var createScene = function () {
     // enable physics using cannon.js physics engine with standard gravity (9.8m/s^2)
     scene.enablePhysics();
 
-    /*
+
     // create camera that can be controlled by the canvas
     var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 90, BABYLON.Vector3.Zero(), scene);
     camera.lowerBetaLimit = 0.1;
@@ -24,9 +24,9 @@ var createScene = function () {
     camera.lowerRadiusLimit = 20;
     camera.upperRadiusLimit = 20;
     camera.attachControl(canvas, true);
-    */
 
 
+/*
     // create a camera that follows Knuckles (hopefully from behind)
     var camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 10, -10), scene);
     camera.radius = -30;
@@ -36,7 +36,7 @@ var createScene = function () {
     camera.maxCameraSpeed = 10;
     camera.attachControl(canvas, true);
 
-
+*/
     /* add lights to the scene */
 
     var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene);
@@ -139,19 +139,19 @@ var createScene = function () {
 };
 
 function moveKnuckles() {
-    if (actions["w"] || actions["W"] || actions["ArrowUp"]) {
+    if (actions["w"] || actions["W"] /*|| actions["ArrowUp"]*/) {
         console.log("forward");
         knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0,0.2), knuckles.getAbsolutePosition());
     }
-    if (actions["a"] || actions["A"] || actions["ArrowLeft"]) {
+    if (actions["a"] || actions["A"] /*|| actions["ArrowLeft"]*/) {
         console.log("left");
         knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(-0.2,0,0), knuckles.getAbsolutePosition());
     }
-    if (actions["s"] || actions["S"] || actions["ArrowDown"]) {
+    if (actions["s"] || actions["S"] /*|| actions["ArrowDown"]*/) {
         console.log("backward");
         knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0,-0.2), knuckles.getAbsolutePosition());
     }
-    if (actions["d"] || actions["D"] || actions["ArrowRight"]) {
+    if (actions["d"] || actions["D"] /*|| actions["ArrowRight"]*/) {
         console.log("right");
         knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0.2,0,0), knuckles.getAbsolutePosition());
     }
