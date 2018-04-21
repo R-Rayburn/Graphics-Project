@@ -58,7 +58,7 @@ var createScene = function () {
     lightSphere2.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
 
     // create ground from supplied heightmap in /textures/heightMap.png
-    var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 10, scene, false, function () {
+    var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
         ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
         let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
         groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
@@ -69,8 +69,101 @@ var createScene = function () {
         ground.material = groundMaterial;
     });
 
+    var ground2 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
+        ground2.physicsImpostor = new BABYLON.PhysicsImpostor(ground2, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground2.position.y = -10.05;
+        ground2.position.x = -500;
+        ground2.material = groundMaterial;
+    });
+    var ground3 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
+        ground3.physicsImpostor = new BABYLON.PhysicsImpostor(ground3, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground3.position.y = -10.05;
+        ground3.position.x = 500;
+        ground3.material = groundMaterial;
+    });
+    var ground4 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
+        ground4.physicsImpostor = new BABYLON.PhysicsImpostor(ground4, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground4.position.y = -10.05;
+        ground4.position.z = 500;
+        ground4.material = groundMaterial;
+    });
+    var ground5 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
+        ground5.physicsImpostor = new BABYLON.PhysicsImpostor(ground5, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground5.position.y = -10.05;
+        ground5.position.z = -500;
+        ground5.material = groundMaterial;
+    });
+    var ground6 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
+        ground6.physicsImpostor = new BABYLON.PhysicsImpostor(ground6, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground6.position.y = -10.05;
+        ground6.position.x = -500;
+        ground6.position.z = -500;
+        ground6.material = groundMaterial;
+    });
+    var ground7 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
+        ground7.physicsImpostor = new BABYLON.PhysicsImpostor(ground7, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground7.position.y = -10.05;
+        ground7.position.x = 500;
+        ground7.position.z = -500;
+        ground7.material = groundMaterial;
+    });
+    var ground8 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
+        ground8.physicsImpostor = new BABYLON.PhysicsImpostor(ground8, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground8.position.y = -10.05;
+        ground8.position.x = -500;
+        ground8.position.z = 500;
+        ground8.material = groundMaterial;
+    });
+    var ground9 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
+        ground9.physicsImpostor = new BABYLON.PhysicsImpostor(ground9, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
+        groundMaterial.diffuseTexture.uScale = 6;
+        groundMaterial.diffuseTexture.vScale = 6;
+        groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+        ground9.position.y = -10.05;
+        ground9.position.x = 500;
+        ground9.position.z = 500;
+        ground9.material = groundMaterial;
+    });
+
     // create skybox
-    var skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size:1000.0}, scene);
+    var skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size:1500.0}, scene);
     var skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/TropicalSunnyDay", scene);
