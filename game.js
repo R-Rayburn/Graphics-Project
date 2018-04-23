@@ -3,6 +3,9 @@ var canvas = document.getElementById("renderCanvas"); // Get the canvas element
 var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
 
 var knuckles = null;
+var inAir = false;
+
+var ground = null;
 
 var actions = {};
 
@@ -15,6 +18,8 @@ var createScene = function () {
 
     // enable physics using cannon.js physics engine with standard gravity (9.8m/s^2)
     scene.enablePhysics();
+    scene.collisionsEnabled = true;
+    scene.workerCollisions = true;
 
 
     // create camera that can be controlled by the canvas
@@ -25,6 +30,7 @@ var createScene = function () {
     camera.upperRadiusLimit = 20;
     camera.attachControl(canvas, true);
 
+    //scene.add(knuckles);
 
 /*
     // create a camera that follows Knuckles (hopefully from behind)
@@ -59,7 +65,7 @@ var createScene = function () {
 
     // create ground from supplied heightmap in /textures/heightMap.png
     var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 10, scene, false, function () {
-        ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
+        ground.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
         let groundMaterial = new BABYLON.StandardMaterial("ground", scene);
         groundMaterial.diffuseTexture = new BABYLON.Texture("textures/ground.jpg", scene);
         groundMaterial.diffuseTexture.uScale = 6;
@@ -67,6 +73,8 @@ var createScene = function () {
         groundMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
         ground.position.y = -10.05;
         ground.material = groundMaterial;
+        ground.checkCollisions = true;
+        ground.name = "ground";
     });
 
     // create skybox
@@ -91,14 +99,17 @@ var createScene = function () {
         // knuckles is the last mesh in the scene since we just added him
         let count = scene.meshes.length;
         let knuckles = scene.meshes[count-1];
+        knuckles.name = "knuckles";
 
         // add rigidbody to knuckles
-        knuckles.PhysicsImposter = new BABYLON.PhysicsImpostor(knuckles, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 1, restitution: 0.9, angularDampening: 1 }, scene);
+        knuckles.PhysicsImposter = new BABYLON.PhysicsImpostor(knuckles, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 0.9, angularDampening: 1 }, scene);
 
         knuckles.PhysicsImposter.executeNativeFunction(function(world, body) {
             body.fixedRotation = true;
             body.updateMassProperties();
         });
+
+        //knuckles.checkCollisions = true;
 
         // Add shadow generators to knuckles.
         shadowGenerator.getShadowMap().renderList.push(knuckles);
@@ -106,6 +117,10 @@ var createScene = function () {
 
         // Allows knuckles to recieve shadows???
         knuckles.receiveShadows = true;
+
+        knuckles.PhysicsImposter.registerOnPhysicsCollide(ground.PhysicsImpostor, function(main, collided) {
+            inAir = false;
+        });
 
         // lock Knuckles orientation about the y-axis so he doesn't fall over
         // still working on this...
@@ -139,26 +154,39 @@ var createScene = function () {
 };
 
 function moveKnuckles() {
+    var impulse = new BABYLON.Vector3(0, 0, 0);
+
     if (actions["w"] || actions["W"] /*|| actions["ArrowUp"]*/) {
         console.log("forward");
-        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0,0.2), knuckles.getAbsolutePosition());
+        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0.1,0.2), knuckles.getAbsolutePosition());
+        impulse.z += 0.2;
     }
     if (actions["a"] || actions["A"] /*|| actions["ArrowLeft"]*/) {
         console.log("left");
-        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(-0.2,0,0), knuckles.getAbsolutePosition());
+        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(-0.2,0.1,0), knuckles.getAbsolutePosition());
+        impulse.x += -0.2;
     }
     if (actions["s"] || actions["S"] /*|| actions["ArrowDown"]*/) {
         console.log("backward");
-        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0,-0.2), knuckles.getAbsolutePosition());
+        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0.1,-0.2), knuckles.getAbsolutePosition());
+        impulse.z += -0.2;
     }
     if (actions["d"] || actions["D"] /*|| actions["ArrowRight"]*/) {
         console.log("right");
-        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0.2,0,0), knuckles.getAbsolutePosition());
+        impulse.x += 0.2;
+
+
     }
     if (actions[" "]) {
-        console.log("jump");
-        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,1,0), knuckles.getAbsolutePosition());
+        if (!inAir) {
+            console.log("jump");
+            impulse.y += 5;
+            inAir = true;
+        }
     }
+
+    console.log(impulse);
+    knuckles.PhysicsImposter.applyImpulse(impulse, knuckles.getAbsolutePosition());
 }
 
 /******* End of the create scene function ******/
@@ -166,9 +194,14 @@ function moveKnuckles() {
 var scene = createScene(); //Call the createScene function
 
 scene.registerBeforeRender(function() {
-    knuckles = scene.meshes[scene.meshes.length-1];
+    //knuckles = scene.meshes[scene.meshes.length-1];
+    knuckles = scene.getMeshByName("knuckles");
+    ground = scene.getMeshByName("ground");
     if (!(knuckles === null)) {
         moveKnuckles();
+    }
+    else {
+        //console.log("could not find Knuckles")
     }
 });
 
