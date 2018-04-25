@@ -25,7 +25,17 @@ var createScene = function () {
     scene.collisionsEnabled = true;
     scene.workerCollisions = true;
 
-
+    /*makes them trees*/
+    trunkMaterial = new BABYLON.StandardMaterial("trunkMaterial", scene);
+    trunkMaterial.diffuseTexture = new BABYLON.Texture("textures/trunk.jpg",scene)
+    leafMaterial = new BABYLON.StandardMaterial("leafMaterial",scene);
+    leafMaterial.diffuseTexture = new BABYLON.Texture("textures/leaf.jpg",scene);
+    //Might possibly need to make several tree objects
+    //Maybe an array filled with tree objects and update the positions? 
+    var tree = QuickTreeGenerator(10, 10, 3, trunkMaterial, leafMaterial, scene);
+    tree.position = new BABYLON.Vector3(30,0,20);
+    
+    
     // create camera that can be controlled by the canvas
     camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 90, BABYLON.Vector3.Zero(), scene);
     camera.lowerBetaLimit = 0.1;
