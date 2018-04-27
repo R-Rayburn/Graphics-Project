@@ -51,7 +51,7 @@ var createScene = function () {
     tree.PhysicsImposter = new BABYLON.PhysicsImpostor(tree, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 });
 
 
-    // create camera that can be controlled by the canvas
+    /* create camera that can be controlled by the canvas */
     camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 90, BABYLON.Vector3.Zero(), scene);
     camera.lowerBetaLimit = 0.1;
     camera.upperBetaLimit = (Math.PI /2) * 0.9;
@@ -66,23 +66,9 @@ var createScene = function () {
     light.position = new BABYLON.Vector3(20, 40, 20);
     light.intensity = 0.5;
 
-    /*
-    var lightSphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
-    lightSphere.position = light.position;
-    lightSphere.material = new BABYLON.StandardMaterial("light", scene);
-    lightSphere.material.emissiveColor = new BABYLON.Color3(1, .5, 0);
-    */
-
     var light2 = new BABYLON.SpotLight("spot02", new BABYLON.Vector3(30, 40, 20),
                           new BABYLON.Vector3(-1, -2, -1), 1.1, 16, scene);
     light2.intensity = 0.5;
-
-    /*
-    var lightSphere2 = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
-    lightSphere2.position = light2.position;
-    lightSphere2.material = new BABYLON.StandardMaterial("light", scene);
-    lightSphere2.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
-    */
 
     var light3 = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
     light3.intensity = 0.5;
@@ -236,7 +222,7 @@ var createScene = function () {
         shadowGenerator.getShadowMap().renderList.push(knuckles);
         shadowGenerator2.getShadowMap().renderList.push(knuckles);
 
-        // Allows knuckles to recieve shadows???
+        // Allows knuckles to recieve shadows
         knuckles.receiveShadows = true;
 
         knuckles.PhysicsImposter.registerOnPhysicsCollide(ground.PhysicsImpostor, function(main, collided) {
@@ -317,17 +303,14 @@ function moveKnuckles() {
 
     if (actions["w"] || actions["W"]) {
         console.log("forward");
-        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0.1,0.2), knuckles.getAbsolutePosition());
         impulse.z = playerSpeed;
     }
     if (actions["a"] || actions["A"]) {
         console.log("left");
-        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(-0.2,0.1,0), knuckles.getAbsolutePosition());
         impulse.x = -playerSpeed;
     }
     if (actions["s"] || actions["S"]) {
         console.log("backward");
-        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0.1,-0.2), knuckles.getAbsolutePosition());
         impulse.z = -playerSpeed;
     }
     if (actions["d"] || actions["D"]) {
@@ -344,13 +327,8 @@ function moveKnuckles() {
         }
     }
 
-    //console.log(impulse);
-    //knuckles.PhysicsImposter.applyImpulse(impulse, knuckles.getAbsolutePosition());
     knuckles.PhysicsImposter.setLinearVelocity(impulse);
 
-    if (jump) {
-        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0, jumpHeight*10, 0), knuckles.getAbsolutePosition());
-    }
 }
 
 /******* End of the create scene function ******/
@@ -358,7 +336,6 @@ function moveKnuckles() {
 createScene(); //Call the createScene function
 
 scene.registerBeforeRender(function() {
-    //knuckles = scene.meshes[scene.meshes.length-1];
     knuckles = scene.getMeshByName("knuckles");
     if (!(knuckles === null)) {
         moveKnuckles();
