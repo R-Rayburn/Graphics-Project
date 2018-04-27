@@ -27,7 +27,7 @@ A game about finding the way.
 
 * Got physics working for knuckles and everything else basically.
 
-* Got sound working (added the dope song)
+* Got sound working (added the dope song) :musical_note:
 
 ## TODO
 
