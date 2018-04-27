@@ -1,0 +1,62 @@
+Exporter version: 5.6.2, Blender version: 2.79 (sub 0)
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used:
+		selected layers only:  false
+		inline textures:  false
+		Positions Precision :  4
+		Normals Precision   :  3
+		UVs Precision       :  3
+		Vert Color Precision:  3
+		Mat Weight Precision:  2
+		texture directory:  C:\Users\Tyler\Documents\GitHub\Graphics-Project\models\
+	Python World class constructor completed
+	processing begun of skeleton:  Armature, id:  0
+		processing begun of bone:  Hip, index:  0
+		processing begun of bone:  Spine, index:  1
+		processing begun of bone:  Chest, index:  2
+		processing begun of bone:  Neck, index:  3
+		processing begun of bone:  Head, index:  4
+		processing begun of bone:  Head_end, index:  5
+		processing begun of bone:  Shoulder.L, index:  6
+		processing begun of bone:  Upper arm.L, index:  7
+		processing begun of bone:  Lower arm.L, index:  8
+		processing begun of bone:  Hand.L, index:  9
+		processing begun of bone:  Hand.L_end, index:  10
+		processing begun of bone:  Shoulder.R, index:  11
+		processing begun of bone:  Upper arm.R, index:  12
+		processing begun of bone:  Lower arm.R, index:  13
+		processing begun of bone:  Hand.R, index:  14
+		processing begun of bone:  Hand.R_end, index:  15
+		processing begun of bone:  Upper leg.L, index:  16
+		processing begun of bone:  Lower leg.L, index:  17
+		processing begun of bone:  Foot.L, index:  18
+		processing begun of bone:  Toe.L, index:  19
+		processing begun of bone:  Toe.L_end, index:  20
+		processing begun of bone:  Upper leg.R, index:  21
+		processing begun of bone:  Lower leg.R, index:  22
+		processing begun of bone:  Foot.R, index:  23
+		processing begun of bone:  Toe.R, index:  24
+		processing begun of bone:  Toe.R_end, index:  25
+		processing action Armature|Armature|ArmatureAction|Armature|ArmatureAction:  in[1 - 25], out[0 - 25]
+		processing action Key|Armature|ArmatureAction|Armature|ArmatureAction:  in[1 - 25], out[30 - 55]
+	processing begun of mesh:  Knuckles
+		processing begun of Standard material:  Material.003
+			Diffuse texture found "KnucklesAlbedo.png"
+				Image texture found, type:  diffuseTexture, mapped using: "UVMap"
+	WARNING: Error encountered processing image file:  , Error:  [Errno 2] No such file or directory: 'C:\\Users\\Tyler\\Documents\\GitHub\\..\\..\\..\\..\\\\Users\\codyrobertson\\WebstormProjects\\graphics\\source\\babylonKnuckles\\models\\Knuckles\\KnucklesAlbedo.png'
+		num positions      :  10216
+		num normals        :  10216
+		num uvs            :  20432
+		num uvs2           :  0
+		num colors         :  0
+		num indices        :  42012
+		Skeleton stats:  
+			Total Influencers:  20614
+			Avg # of influencers per vertex:  2.0178
+			Highest # of influencers observed:  8, num vertices with this:  6
+			exported as 8 influencers
+			num skeletonWeights and skeletonIndices:  81728
+		Shape Keys:
+	Mesh: Knuckles has un-applied transformations.  This will never work for a mesh with an armature.  Export cancelled
+========= end of processing =========
+elapsed time:  0 min, 4.1095 secs

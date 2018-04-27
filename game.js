@@ -202,14 +202,15 @@ var createScene = function () {
     var shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
     var shadowGenerator2 = new BABYLON.ShadowGenerator(1024, light2);
 
-    BABYLON.SceneLoader.AppendAsync("models/Knuckles/", "Knuckles.obj", scene).then(function (scene) {
+    BABYLON.SceneLoader.AppendAsync("models/Knuckles/", "Knuckles.babylon", scene).then(function (scene) {
 
         // knuckles is the last mesh in the scene since we just added him
-        let count = scene.meshes.length;
-        let knuckles = scene.meshes[count-1];
-        knuckles.name = "knuckles";
-
-        // add rigidbody to knuckles
+		BABYLON.SceneLoader.ImportMesh("knuckles", "models/Knuckles/", "Knuckles.obj", scene, function (knuckles, particleSystems) {
+        //let count = scene.meshes.length;
+		//let knuckles = scene.meshes[count-1];
+		this.knuckles.name = knuckles;
+        
+		// add rigidbody to knuckles
         knuckles.PhysicsImposter = new BABYLON.PhysicsImpostor(knuckles, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 10, restitution: 0.0, friction: 0.5 }, scene);
 
         knuckles.PhysicsImposter.executeNativeFunction(function(world, body) {
@@ -257,8 +258,8 @@ var createScene = function () {
 
         // set camera to follow Knuckles
         camera.lockedTarget = knuckles;
+		});
     });
-
     /* ------- End Importing Knuckles -------- */
 
     // Allows landscape to recieve shadows.
