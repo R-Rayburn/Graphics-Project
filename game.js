@@ -45,13 +45,13 @@ var createScene = function () {
     leafMaterial = new BABYLON.StandardMaterial("leafMaterial",scene);
     leafMaterial.diffuseTexture = new BABYLON.Texture("textures/leaf.jpg",scene);
     //Might possibly need to make several tree objects
-    //Maybe an array filled with tree objects and update the positions? 
+    //Maybe an array filled with tree objects and update the positions?
     var tree = QuickTreeGenerator(10, 10, 3, trunkMaterial, leafMaterial, scene);
     tree.position = new BABYLON.Vector3(30,0,20);
     tree.PhysicsImposter = new BABYLON.PhysicsImpostor(tree, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 });
-    
-    
-    // create camera that can be controlled by the canvas
+
+
+    /* create camera that can be controlled by the canvas */
     camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 90, BABYLON.Vector3.Zero(), scene);
     camera.lowerBetaLimit = 0.1;
     camera.upperBetaLimit = (Math.PI /2) * 0.9;
@@ -66,28 +66,15 @@ var createScene = function () {
     light.position = new BABYLON.Vector3(20, 40, 20);
     light.intensity = 0.5;
 
-    /*
-    var lightSphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
-    lightSphere.position = light.position;
-    lightSphere.material = new BABYLON.StandardMaterial("light", scene);
-    lightSphere.material.emissiveColor = new BABYLON.Color3(1, .5, 0);
-    */
-
     var light2 = new BABYLON.SpotLight("spot02", new BABYLON.Vector3(30, 40, 20),
                           new BABYLON.Vector3(-1, -2, -1), 1.1, 16, scene);
     light2.intensity = 0.5;
-
-    /*
-    var lightSphere2 = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
-    lightSphere2.position = light2.position;
-    lightSphere2.material = new BABYLON.StandardMaterial("light", scene);
-    lightSphere2.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
-    */
 
     var light3 = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
     light3.intensity = 0.5;
 
     // create ground from supplied heightmap in /textures/heightMap.png
+    // Got from shadows example on https://playground.babylonjs.com
     var ground = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 10, scene, false, function () {
         ground.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
 
@@ -99,7 +86,6 @@ var createScene = function () {
         ground.position.y = -10.05;
         ground.material = groundMaterial;
         ground.checkCollisions = true;
-        ground.name = "ground";
     });
 
     var ground2 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
@@ -112,7 +98,6 @@ var createScene = function () {
         ground2.position.y = -10.05;
         ground2.position.x = -500;
         ground2.material = groundMaterial;
-        //ground.name = "ground";
     });
     var ground3 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
         ground3.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground3, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
@@ -124,7 +109,6 @@ var createScene = function () {
         ground3.position.y = -10.05;
         ground3.position.x = 500;
         ground3.material = groundMaterial;
-        //ground.name = "ground";
     });
     var ground4 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
         ground4.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground4, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
@@ -136,7 +120,6 @@ var createScene = function () {
         ground4.position.y = -10.05;
         ground4.position.z = 500;
         ground4.material = groundMaterial;
-        //ground.name = "ground";
     });
     var ground5 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
         ground5.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground5, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
@@ -148,7 +131,6 @@ var createScene = function () {
         ground5.position.y = -10.05;
         ground5.position.z = -500;
         ground5.material = groundMaterial;
-        ground.name = "ground";
     });
     var ground6 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
         ground6.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground6, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
@@ -161,7 +143,6 @@ var createScene = function () {
         ground6.position.x = -500;
         ground6.position.z = -500;
         ground6.material = groundMaterial;
-        //ground.name = "ground";
     });
     var ground7 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
         ground7.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground7, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
@@ -174,7 +155,6 @@ var createScene = function () {
         ground7.position.x = 500;
         ground7.position.z = -500;
         ground7.material = groundMaterial;
-        ground.name = "ground";
     });
     var ground8 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
         ground8.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground8, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
@@ -187,7 +167,6 @@ var createScene = function () {
         ground8.position.x = -500;
         ground8.position.z = 500;
         ground8.material = groundMaterial;
-        //ground.name = "ground";
     });
     var ground9 = BABYLON.Mesh.CreateGroundFromHeightMap("ground", "textures/heightMap.png", 500, 500, 505, 0, 20, scene, true, function () {
         ground9.PhysicsImpostor = new BABYLON.PhysicsImpostor(ground9, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0 });
@@ -200,7 +179,6 @@ var createScene = function () {
         ground9.position.x = 500;
         ground9.position.z = 500;
         ground9.material = groundMaterial;
-        //ground.name = "ground";
     });
 
     // create skybox
@@ -245,7 +223,7 @@ var createScene = function () {
         shadowGenerator.getShadowMap().renderList.push(knuckles);
         shadowGenerator2.getShadowMap().renderList.push(knuckles);
 
-        // Allows knuckles to recieve shadows???
+        // Allows knuckles to recieve shadows
         knuckles.receiveShadows = true;
 
         knuckles.PhysicsImposter.registerOnPhysicsCollide(ground.PhysicsImpostor, function(main, collided) {
@@ -329,22 +307,19 @@ function moveKnuckles() {
     var impulse;
     impulse = knuckles.PhysicsImposter.getLinearVelocity();
 
-    if (actions["w"] || actions["W"] /*|| actions["ArrowUp"]*/) {
+    if (actions["w"] || actions["W"]) {
         console.log("forward");
-        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0.1,0.2), knuckles.getAbsolutePosition());
         impulse.z = playerSpeed;
     }
-    if (actions["a"] || actions["A"] /*|| actions["ArrowLeft"]*/) {
+    if (actions["a"] || actions["A"]) {
         console.log("left");
-        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(-0.2,0.1,0), knuckles.getAbsolutePosition());
         impulse.x = -playerSpeed;
     }
-    if (actions["s"] || actions["S"] /*|| actions["ArrowDown"]*/) {
+    if (actions["s"] || actions["S"]) {
         console.log("backward");
-        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0.1,-0.2), knuckles.getAbsolutePosition());
         impulse.z = -playerSpeed;
     }
-    if (actions["d"] || actions["D"] /*|| actions["ArrowRight"]*/) {
+    if (actions["d"] || actions["D"]) {
         console.log("right");
         impulse.x = playerSpeed;
     }
@@ -366,7 +341,6 @@ function moveKnuckles() {
 createScene(); //Call the createScene function
 
 scene.registerBeforeRender(function() {
-    //knuckles = scene.meshes[scene.meshes.length-1];
     knuckles = scene.getMeshByName("knuckles");
     if (!(knuckles === null)) {
         moveKnuckles();
