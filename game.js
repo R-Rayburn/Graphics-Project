@@ -10,7 +10,7 @@ var actions = {};
 var scene;
 var camera;
 
-var playerSpeed = 20;
+var playerSpeed = 50;
 var jumpHeight = 10;
 
 var knowTheWayClip;
@@ -206,6 +206,7 @@ var createScene = function () {
     // create skybox
     var skybox = BABYLON.MeshBuilder.CreateBox("skybox", {size:1500.0}, scene);
     var skyboxMaterial = new BABYLON.StandardMaterial("skybox", scene);
+    //skybox.PhysicsImposter = new BABYLON.PhysicsImpostor(skybox, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 0 }, scene);
     skyboxMaterial.backFaceCulling = false;
     skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/TropicalSunnyDay", scene);
     skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
@@ -319,9 +320,14 @@ var createScene = function () {
 };
 
 function moveKnuckles() {
-    var impulse = new BABYLON.Vector3(0, 0, 0);
+    var position = knuckles.getAbsolutePosition();
+    if (position.y < -10) {
+        //knuckles.setPosition(new BABYLON.Vector3(0, 0, 0));
+        knuckles.setPositionWithLocalVector(new BABYLON.Vector3(0, 0, 0));
+    }
+
+    var impulse;
     impulse = knuckles.PhysicsImposter.getLinearVelocity();
-    var jump = false;
 
     if (actions["w"] || actions["W"] /*|| actions["ArrowUp"]*/) {
         console.log("forward");
@@ -347,18 +353,12 @@ function moveKnuckles() {
             console.log("jump");
             impulse.y += jumpHeight;
 
-            jump = true;
             inAir = true;
         }
     }
 
-    //console.log(impulse);
-    //knuckles.PhysicsImposter.applyImpulse(impulse, knuckles.getAbsolutePosition());
     knuckles.PhysicsImposter.setLinearVelocity(impulse);
 
-    if (jump) {
-        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0, jumpHeight*10, 0), knuckles.getAbsolutePosition());
-    }
 }
 
 /******* End of the create scene function ******/
