@@ -37,4 +37,4 @@ A game about finding the way.
 
 * Add power-ups
 
-* Networking features(Stretch goal) :jolley_roger:
+* Networking features(Stretch goal) :skull_and_crossbones:
