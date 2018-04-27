@@ -311,7 +311,6 @@ var createScene = function () {
 function moveKnuckles() {
     var position = knuckles.getAbsolutePosition();
     if (position.y < -10) {
-        //knuckles.setPosition(new BABYLON.Vector3(0, 0, 0));
         knuckles.setPositionWithLocalVector(new BABYLON.Vector3(0, 0, 0));
     }
 
