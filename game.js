@@ -10,8 +10,10 @@ var actions = {};
 var scene;
 var camera;
 
-var playerSpeed = 10;
+var playerSpeed = 20;
 var jumpHeight = 10;
+
+var knowTheWayClip;
 
 
 /******* Add the create scene function ******/
@@ -22,8 +24,20 @@ var createScene = function () {
 
     // enable physics using cannon.js physics engine with standard gravity (9.8m/s^2)
     scene.enablePhysics();
+    scene.getPhysicsEngine().setGravity(new BABYLON.Vector3(0, -20, 0));
     scene.collisionsEnabled = true;
     scene.workerCollisions = true;
+
+    // Load the sound and play it automatically once ready
+    var music = new BABYLON.Sound("Music", "./audio/knuckles-trapremix.mp3", scene,
+        function () {
+            // Sound has been downloaded & decoded
+            music.play();
+        }
+    );
+
+    var knowTheWayClip = new BABYLON.Sound("gunshot", "audio/doyouknowtheway.mp3", scene);
+
 
     /*makes them trees*/
     trunkMaterial = new BABYLON.StandardMaterial("trunkMaterial", scene);
@@ -34,6 +48,7 @@ var createScene = function () {
     //Maybe an array filled with tree objects and update the positions?
     var tree = QuickTreeGenerator(10, 10, 3, trunkMaterial, leafMaterial, scene);
     tree.position = new BABYLON.Vector3(30,0,20);
+    tree.PhysicsImposter = new BABYLON.PhysicsImpostor(tree, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 });
 
 
     // create camera that can be controlled by the canvas
@@ -44,26 +59,30 @@ var createScene = function () {
     camera.upperRadiusLimit = 20;
     camera.attachControl(canvas, true);
 
+
     /* add lights to the scene */
 
     var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene);
     light.position = new BABYLON.Vector3(20, 40, 20);
     light.intensity = 0.5;
 
-
+    /*
     var lightSphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
     lightSphere.position = light.position;
     lightSphere.material = new BABYLON.StandardMaterial("light", scene);
     lightSphere.material.emissiveColor = new BABYLON.Color3(1, .5, 0);
+    */
 
     var light2 = new BABYLON.SpotLight("spot02", new BABYLON.Vector3(30, 40, 20),
                           new BABYLON.Vector3(-1, -2, -1), 1.1, 16, scene);
     light2.intensity = 0.5;
 
+    /*
     var lightSphere2 = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
     lightSphere2.position = light2.position;
     lightSphere2.material = new BABYLON.StandardMaterial("light", scene);
     lightSphere2.material.emissiveColor = new BABYLON.Color3(1, 1, 0);
+    */
 
     var light3 = new BABYLON.HemisphericLight("HemiLight", new BABYLON.Vector3(0, 1, 0), scene);
     light3.intensity = 0.5;
@@ -205,7 +224,7 @@ var createScene = function () {
         knuckles.name = "knuckles";
 
         // add rigidbody to knuckles
-        knuckles.PhysicsImposter = new BABYLON.PhysicsImpostor(knuckles, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 10, restitution: 0.9, angularDampening: 1 }, scene);
+        knuckles.PhysicsImposter = new BABYLON.PhysicsImpostor(knuckles, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 10, restitution: 0.0, friction: 0.5 }, scene);
 
         knuckles.PhysicsImposter.executeNativeFunction(function(world, body) {
             // lock Knuckles orientation about the y-axis so he doesn't fall over
@@ -276,6 +295,9 @@ var createScene = function () {
     scene.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyDownTrigger, function (event) {
             actions[event.sourceEvent.key] = true;
+            if (event.sourceEvent.key === 'k') {
+                knowTheWayClip.play();
+            }
         })
     );
     scene.actionManager.registerAction(
@@ -288,13 +310,10 @@ var createScene = function () {
     return scene;
 };
 
-function importKnuckles() {
-
-}
-
 function moveKnuckles() {
     var impulse = new BABYLON.Vector3(0, 0, 0);
     impulse = knuckles.PhysicsImposter.getLinearVelocity();
+    var jump = false;
 
     if (actions["w"] || actions["W"]) {
         console.log("forward");
@@ -303,31 +322,35 @@ function moveKnuckles() {
     }
     if (actions["a"] || actions["A"]) {
         console.log("left");
-        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(-0.2,0.1,0), knuckles.getAbsolutePosition());
+        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(-0.2,0.1,0), knuckles.getAbsolutePosition());
         impulse.x = -playerSpeed;
     }
     if (actions["s"] || actions["S"]) {
         console.log("backward");
-        knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0.1,-0.2), knuckles.getAbsolutePosition());
+        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0,0.1,-0.2), knuckles.getAbsolutePosition());
         impulse.z = -playerSpeed;
     }
     if (actions["d"] || actions["D"]) {
         console.log("right");
         impulse.x = playerSpeed;
-
-
     }
     if (actions[" "]) {
         if (!inAir) {
             console.log("jump");
             impulse.y += jumpHeight;
+
+            jump = true;
             inAir = true;
         }
     }
 
-    console.log(impulse);
+    //console.log(impulse);
     //knuckles.PhysicsImposter.applyImpulse(impulse, knuckles.getAbsolutePosition());
     knuckles.PhysicsImposter.setLinearVelocity(impulse);
+
+    if (jump) {
+        //knuckles.PhysicsImposter.applyImpulse(new BABYLON.Vector3(0, jumpHeight*10, 0), knuckles.getAbsolutePosition());
+    }
 }
 
 /******* End of the create scene function ******/
