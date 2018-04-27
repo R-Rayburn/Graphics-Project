@@ -61,10 +61,14 @@ var createScene = function () {
 
 
     /* add lights to the scene */
-
     var light = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(-1, -2, -1), scene);
     light.position = new BABYLON.Vector3(20, 40, 20);
     light.intensity = 0.5;
+
+    var lightSphere = BABYLON.Mesh.CreateSphere("sphere", 10, 2, scene);
+    lightSphere.position = light.position;
+    lightSphere.material = new BABYLON.StandardMaterial("light", scene);
+    lightSphere.material.emissiveColor = new BABYLON.Color3(1, .5, 0);
 
     var light2 = new BABYLON.SpotLight("spot02", new BABYLON.Vector3(30, 40, 20),
                           new BABYLON.Vector3(-1, -2, -1), 1.1, 16, scene);
