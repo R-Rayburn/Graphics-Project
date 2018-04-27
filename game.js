@@ -10,7 +10,7 @@ var actions = {};
 var scene;
 var camera;
 
-var playerSpeed = 50;
+var playerSpeed = 30;
 var jumpHeight = 10;
 
 var knowTheWayClip;
@@ -50,6 +50,12 @@ var createScene = function () {
     tree.position = new BABYLON.Vector3(30,0,20);
     tree.PhysicsImposter = new BABYLON.PhysicsImpostor(tree, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 });
 
+    leafMaterial = new BABYLON.StandardMaterial("leafMaterial",scene);
+    leafMaterial.diffuseTexture = new BABYLON.Texture("textures/red_leaf.jpg", scene);
+
+    var tree2 = QuickTreeGenerator(10, 10, 3, trunkMaterial, leafMaterial, scene);
+    tree2.position = new BABYLON.Vector3(-30,0,20);
+    tree2.PhysicsImposter = new BABYLON.PhysicsImpostor(tree2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 });
 
     /* create camera that can be controlled by the canvas */
     camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 90, BABYLON.Vector3.Zero(), scene);
@@ -262,6 +268,7 @@ var createScene = function () {
 
         // set camera to follow Knuckles
         camera.lockedTarget = knuckles;
+
     });
 
     /* ------- End Importing Knuckles -------- */
@@ -310,6 +317,17 @@ function moveKnuckles() {
 
     var impulse;
     impulse = knuckles.PhysicsImposter.getLinearVelocity();
+
+    /* Code for changing speed on collision with trees
+     * Currently inactive.
+    if(knuckles.intersectsMesh(tree, true) && playerSpeed < 500){
+      playerSpeed+=10;
+    } else if(knuckles.intersectsMesh(tree2, true) && playerSpeed > 10) {
+      playerSpeed -= 10;
+    } else {
+      playerSpeed = playerSpeed;
+    }
+    */
 
     if (actions["w"] || actions["W"]) {
         console.log("forward");
