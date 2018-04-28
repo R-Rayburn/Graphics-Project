@@ -3,7 +3,11 @@ var canvas = document.getElementById("renderCanvas"); // Get the canvas element
 var engine = new BABYLON.Engine(canvas, true); // Generate the BABYLON 3D engine
 
 var knuckles = null;
+var isKnucklesLoaded = false;
 var inAir = false;
+
+var tree;
+var tree2;
 
 var actions = {};
 
@@ -11,7 +15,10 @@ var scene;
 var camera;
 
 var playerSpeed = 30;
+var maxSpeed = 100;
+var minSpeed = 1;
 var jumpHeight = 10;
+var speedPowerupModifier = 1;
 
 var knowTheWayClip;
 
@@ -41,21 +48,24 @@ var createScene = function () {
 
     /*makes them trees*/
     trunkMaterial = new BABYLON.StandardMaterial("trunkMaterial", scene);
-    trunkMaterial.diffuseTexture = new BABYLON.Texture("textures/trunk.jpg",scene)
+    trunkMaterial.diffuseTexture = new BABYLON.Texture("textures/trunk.jpg",scene);
     leafMaterial = new BABYLON.StandardMaterial("leafMaterial",scene);
     leafMaterial.diffuseTexture = new BABYLON.Texture("textures/leaf.jpg",scene);
+
     //Might possibly need to make several tree objects
     //Maybe an array filled with tree objects and update the positions?
-    var tree = QuickTreeGenerator(10, 10, 3, trunkMaterial, leafMaterial, scene);
-    tree.position = new BABYLON.Vector3(30,0,20);
+    tree = QuickTreeGenerator(10, 10, 3, trunkMaterial, leafMaterial, scene);
+    tree.position = new BABYLON.Vector3(30,-1,20);
     tree.PhysicsImposter = new BABYLON.PhysicsImpostor(tree, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 });
+    tree.checkCollisions = true;
 
     leafMaterial = new BABYLON.StandardMaterial("leafMaterial",scene);
     leafMaterial.diffuseTexture = new BABYLON.Texture("textures/red_leaf.jpg", scene);
 
-    var tree2 = QuickTreeGenerator(10, 10, 3, trunkMaterial, leafMaterial, scene);
-    tree2.position = new BABYLON.Vector3(-30,0,20);
+    tree2 = QuickTreeGenerator(10, 10, 3, trunkMaterial, leafMaterial, scene);
+    tree2.position = new BABYLON.Vector3(-30,-1,20);
     tree2.PhysicsImposter = new BABYLON.PhysicsImpostor(tree2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 });
+    tree2.checkCollisions = true;
 
     /* create camera that can be controlled by the canvas */
     camera = new BABYLON.ArcRotateCamera("Camera", 0, 0.8, 90, BABYLON.Vector3.Zero(), scene);
@@ -221,7 +231,8 @@ var createScene = function () {
         knuckles.name = "knuckles";
 
         // add rigidbody to knuckles
-        knuckles.PhysicsImposter = new BABYLON.PhysicsImpostor(knuckles, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 10, restitution: 0.0, friction: 0.5 }, scene);
+        knuckles.PhysicsImposter = new BABYLON.PhysicsImpostor(knuckles, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 100, restitution: 0.5, friction: 0.5 }, scene);
+        knuckles.PhysicsImposter.linearDamping = 20;
 
         knuckles.PhysicsImposter.executeNativeFunction(function(world, body) {
             // lock Knuckles orientation about the y-axis so he doesn't fall over
@@ -236,6 +247,7 @@ var createScene = function () {
         // Allows knuckles to recieve shadows
         knuckles.receiveShadows = true;
 
+        // Check for collision with grounds.  If collision is detected, knuckles is on the ground
         knuckles.PhysicsImposter.registerOnPhysicsCollide(ground.PhysicsImpostor, function(main, collided) {
             inAir = false;
         });
@@ -264,6 +276,7 @@ var createScene = function () {
             inAir = false;
         });
 
+        // make light follow knuckles
         light.parent = knuckles;
 
         // set camera to follow Knuckles
@@ -301,7 +314,6 @@ var createScene = function () {
     scene.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnKeyUpTrigger, function (event) {
             actions[event.sourceEvent.key] = false;
-            console.log(event.sourceEvent.key);
         })
     );
 
@@ -310,38 +322,31 @@ var createScene = function () {
 
 function moveKnuckles() {
     var position = knuckles.getAbsolutePosition();
-    if (position.y < -10) {
+    if (position.y < -12) {
         knuckles.setPositionWithLocalVector(new BABYLON.Vector3(0, 0, 0));
     }
 
     var impulse;
     impulse = knuckles.PhysicsImposter.getLinearVelocity();
 
-    /* Code for changing speed on collision with trees
-     * Currently inactive.
-    if(knuckles.intersectsMesh(tree, true) && playerSpeed < 500){
-      playerSpeed+=10;
-    } else if(knuckles.intersectsMesh(tree2, true) && playerSpeed > 10) {
-      playerSpeed -= 10;
-    } else {
-      playerSpeed = playerSpeed;
+    /* Code for changing speed on collision with trees */
+    if(knuckles.intersectsMesh(tree, true) && playerSpeed < maxSpeed-speedPowerupModifier){
+      playerSpeed+=speedPowerupModifier;
+    } else if(knuckles.intersectsMesh(tree2, true) && playerSpeed > minSpeed+speedPowerupModifier) {
+      playerSpeed -= speedPowerupModifier;
     }
-    */
+
 
     if (actions["w"] || actions["W"]) {
-        console.log("forward");
         impulse.z = playerSpeed;
     }
     if (actions["a"] || actions["A"]) {
-        console.log("left");
         impulse.x = -playerSpeed;
     }
     if (actions["s"] || actions["S"]) {
-        console.log("backward");
         impulse.z = -playerSpeed;
     }
     if (actions["d"] || actions["D"]) {
-        console.log("right");
         impulse.x = playerSpeed;
     }
     if (actions[" "]) {
@@ -364,10 +369,11 @@ createScene(); //Call the createScene function
 scene.registerBeforeRender(function() {
     knuckles = scene.getMeshByName("knuckles");
     if (!(knuckles === null)) {
+        if (isKnucklesLoaded == false) {
+            isKnucklesLoaded = true;
+            console.log("Knuckles loaded");
+        }
         moveKnuckles();
-    }
-    else {
-        console.log("can not find Knuckles");
     }
 });
 
